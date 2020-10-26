@@ -175,7 +175,7 @@ def test_readme_image():
 
     ambiguous_route = list(r.route(1, 4))
     first_direction = r.directions[1, 4]
-    assert first_direction in b'>', b'v'
+    assert first_direction in (b'>', b'v')
     if first_direction == b'>':
         assert ambiguous_route == [(1, 5), (0, 5), (0, 1), (2, 1)]
     elif first_direction == b'v':
