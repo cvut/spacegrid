@@ -279,8 +279,10 @@ def test_readme_image():
     ]
     assert numpy.array_equal(r.distances, expected_distances)
 
+    # WARNING: This array might not be 100% complete
+    # If your direction is not listed, verify manually and open a PR
     possible_directions = [
-        ['>v', 'v', '<', '<', '<',  '<', '<',  'v', 'v', 'v',  'v' ],
+        ['>v', 'v', '<', '<', '<',  '<', '<>', 'v', 'v', 'v',  'v' ],
         ['v',  'v', '>', '>', '>v', '^', ' ',  '>', '+', '<v', '<' ],
         ['>',  '+', ' ', ' ', 'v',  '^v', 'v', '^', '^', 'v',  'v' ],
         ['^',  '^', '>', '>', 'v>', '>', 'v',  '^', ' ', '+',  '<' ],
