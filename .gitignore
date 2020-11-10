@@ -1,0 +1,6 @@
+/build/
+/spacegrid.egg-info/
+*.c
+*.so
+*.dll
+*.html

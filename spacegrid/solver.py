@@ -1,6 +1,8 @@
 import queue
 import numpy
 
+from . import speedup
+
 __all__ = ['escape_routes']
 
 
@@ -38,67 +40,7 @@ class _EscapeRoutes:
         if not numpy.issubdtype(dtype, numpy.integer):
             raise TypeError('grid does not quack like an integer array')
 
-        distances_dtype = cls.smallest_signed_dtype(size)
-        directions_dtype = numpy.dtype(('a', 1))  # one ASCII character
-
-        distances = numpy.full(shape, -1, dtype=distances_dtype)
-        directions = numpy.full(shape, b' ', dtype=directions_dtype)
-
-        jobs = queue.Queue()
-
-        stations = numpy.argwhere(grid == 2)
-        for row, column in stations:
-            directions[row, column] = b'+'
-            distances[row, column] = 0
-            jobs.put(((row, column), 1))  # next distance
-
-        while not jobs.empty():
-            loc_, dist_ = jobs.get()
-            for direction in 'down', 'right', 'up', 'left':  # any order
-                # reset the values for each direction
-                loc, dist = loc_, dist_
-                while True:
-                    # walk that direction, but stop at boundary
-                    # this ugly if could be delegated to functions in dict :/
-                    if direction == 'down':
-                        loc = loc[0]+1, loc[1]
-                        reverse = b'^'
-                        if loc[0] == shape[0]:
-                            break
-                    elif direction == 'right':
-                        loc = loc[0], loc[1]+1
-                        reverse = b'<'
-                        if loc[1] == shape[1]:
-                            break
-                    elif direction == 'up':
-                        loc = loc[0]-1, loc[1]
-                        reverse = b'v'
-                        if loc[0] < 0:
-                            break
-                    else:  # left
-                        loc = loc[0], loc[1]-1
-                        reverse = b'>'
-                        if loc[1] < 0:
-                            break
-                    # singularities cannot be beamed trough
-                    # no point of checking past a safe station
-                    if grid[loc] > 1:
-                        break
-                    # been there better? skip but check further if not a node
-                    if 0 <= distances[loc] <= dist:
-                        if grid[loc] == 1:
-                            break
-                        continue
-                    distances[loc] = dist
-                    directions[loc] = reverse
-                    # if it's a transport node,
-                    # we need to increase our distance and
-                    # schedule a job
-                    if grid[loc] == 1:
-                        dist += 1
-                        jobs.put((loc, dist))
-
-        return distances, directions
+        return speedup.flood(grid.astype(numpy.uint8, copy=False))
 
     @property
     def safe_factor(self):
