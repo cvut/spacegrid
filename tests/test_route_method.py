@@ -2,8 +2,8 @@ import numpy
 import pytest
 
 from test_interface import empty_grid
-from test_results import escape_routes_, big_random_grid
-from test_results import VOID, NODE, STATION, SINGULARITY
+from test_results import escape_routes_
+from test_results import VOID, NODE, STATION, SINGULARITY, BIG_RANDOM_GRID
 
 
 def test_all_stations():
@@ -182,16 +182,20 @@ def test_readme_image():
         assert ambiguous_route == [(5, 4), (5, 0), (2, 0), (2, 1)]
 
 
+@pytest.mark.timeout(20)
 def test_large_grid_slow():
-    grid = big_random_grid()
-    r = escape_routes_(grid)
+    grid = BIG_RANDOM_GRID
+    for i in range(10):
+        print(i)
+        r = escape_routes_(grid)
 
-    station = numpy.argwhere(grid == 2)[0]
-    assert list(r.route(*station)) == []
+        station = numpy.argwhere(grid == 2)[0]
+        assert list(r.route(*station)) == []
 
-    singularity = numpy.argwhere(grid == 3)[0]
-    with pytest.raises(ValueError):
-        r.route(*singularity)
+        singularity = numpy.argwhere(grid == 3)[0]
+        with pytest.raises(ValueError):
+            r.route(*singularity)
 
-    row, col = numpy.unravel_index(numpy.argmax(r.distances), grid.shape)
-    assert len(list(r.route(row, col))) == r.distances[row, col]
+        row, col = numpy.unravel_index(numpy.argmax(r.distances), grid.shape)
+        for i in range(50):
+            assert len(list(r.route(row, col))) == r.distances[row, col]

@@ -28,6 +28,10 @@ def big_random_grid():
     return line.reshape(BIG_ENOUGH_NUMBER, BIG_ENOUGH_NUMBER)
 
 
+# we do this globally to avoid interfering with the times
+BIG_RANDOM_GRID = big_random_grid()
+
+
 def escape_routes_(grid):
     print('GRID:')
     print(grid)
@@ -296,12 +300,15 @@ def test_readme_image():
     assert r.safe_factor == reachable / grid.size
 
 
+@pytest.mark.timeout(20)
 def test_large_grid_slow():
-    grid = big_random_grid()
-    r = escape_routes_(grid)
-
+    grid = BIG_RANDOM_GRID
     count = numpy.count_nonzero
 
-    assert count(r.distances == 0) == count(r.directions == b'+') == count(grid == 2)
-    assert count(r.distances == -1) >= count(grid == 3)
-    assert 0.0 < r.safe_factor < 1.0
+    for i in range(10):
+        print(i)
+        r = escape_routes_(grid)
+
+        assert count(r.distances == 0) == count(r.directions == b'+') == count(grid == 2)
+        assert count(r.distances == -1) >= count(grid == 3)
+        assert 0.0 < r.safe_factor < 1.0

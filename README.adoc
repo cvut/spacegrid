@@ -1,11 +1,23 @@
-= spacegrid I.
+= spacegrid II.
 :toc:
 :note-caption: :information_source:
 :warning-caption: :warning:
 
 == Zadání
 
+Vaším úkolem za 5 bodů je zrychlit pomocí Cythonu algoritmus řešení nouzového transportu tak,
+aby zvládal řešit i mřížky o rozměrech v řádech nižší jednotky tisíců × nižší jednotky tisíců
+na moderním počítači (srovnatelném s těmi ve školní učebně) v průměrném čase maximálně 1 sekundu
+(a volání `.route()` by se u takové mřížky mělo stihnout za sekundu aspoň 50).
+Úkol musí splňovat všechny náležitosti z minula + podmínku na čas.
+
+WARNING: Vaším úkolem *není* přepsat celé řešení do Cythonu.
+
+Následuje zadání, které stále platí:
+
 Vaším úkolem je pomocí NumPy vytvořit funkci `escape_routes(grid)` v modulu `spacegrid`.
+
+NOTE: Referenční řešení minulé úlohy je zde v repozitáři.
 
 Na vstupu bude dvourozměrná vesmírná mřížka uložená v matici malých nezáporných čísel.
 Na uzlech mřížky se nachází vesmírné objekty (zakódované pomocí čísel v matici).
@@ -122,9 +134,10 @@ Pokud si tedy potřebujete vstupní data uchovat, nemusíte si dělat jejich kop
 Součástí zadání úkolu je sada automatických testů.
 Jejich splnění je povinnou, nikoli však dostačující podmínkou pro splnění úkolu.
 
-Pro spuštění testů nainstalujte do virtuálního prostředí balík `pytest` a spusťte:
+Pro spuštění testů nainstalujte do virtuálního prostředí balík `pytest-timeout` a spusťte:
 
 [source,console]
+$ python setup.py build_ext -i  # sestaví modul napsaný v Cythonu
 $ python -m pytest -v tests
 
 Testy nevyžadují žádný speciální setup, funkce `escape_routes` nemá žádné side-effecty.
@@ -133,9 +146,8 @@ Testy si doporučujeme zkopírovat k sobě do repozitáře.
 NOTE: Testy hojně využívají forcykly, aby byly čitelné pro studenty neznalé pytestu.
 V lekci o pytestu se neučíme psát parametrizované testy místo forcyklů a vysvětlíme si, proč je to lepší.
 
-WARNING: Test `test_large_grid_slow` trvá dlouho.
-Pro rychlejší debugging cyklus ho doporučujeme vypnout pomocí `-k "not slow"` a testovat jej „jako poslední“.
-Test také potřebuje poměrně hodně paměti, velikost testu můžete ovlivnit pomocí proměnné prostředí `BIG_ENOUGH_NUMBER`.
+WARNING: Test `test_large_grid_slow` je doplněn o kontrolu na čas pomocí pluginu `pytest-timeout`.
+Pokud máte slabší počítač, můžete testovat se sníženou hodnotou `BIG_ENOUGH_NUMBER`.
 
 == Licence
 
@@ -149,6 +161,6 @@ a je dostupná pod stejnou licencí.
 
 * vytvořte si nový privátní git repozitář s názvem `spacegrid` (do něj nás pozvěte, případné kolize s existujícími repozitáři řešte e-mailem)
 * na tuto úlohu budou navazovat další, všechny se budou tématicky věnovat tomuto zadání
-* v repozitáři odevzdávejte pomocí tagu `v0.1`
-* všechny závislosti (včetně `numpy`) uveďte v souboru `requirements.txt` (nemusí být s konkrétní verzí)
-* z kořenového adresáře repozitáře musí jít po instalaci závislostí udělat v Pythonu `from spacegrid import escape_routes` a `escape_routes(grid)` a spustit dodané testy
+* v repozitáři odevzdávejte pomocí tagu `v0.2`
+* všechny závislosti (včetně `numpy` a `Cython`) uveďte v souboru `requirements.txt` (nemusí být s konkrétní verzí)
+* z kořenového adresáře repozitáře musí jít po instalaci závislostí udělat `python setup.py build_ext -i` a poté v Pythonu `from spacegrid import escape_routes` a `escape_routes(grid)` a spustit dodané testy
