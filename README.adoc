@@ -1,19 +1,56 @@
-= spacegrid II.
+= spacegrid III.
 :toc:
 :note-caption: :information_source:
 :warning-caption: :warning:
 
 == Zadání
 
-Vaším úkolem za 5 bodů je zrychlit pomocí Cythonu algoritmus řešení nouzového transportu tak,
-aby zvládal řešit i mřížky o rozměrech v řádech nižší jednotky tisíců × nižší jednotky tisíců
-na moderním počítači (srovnatelném s těmi ve školní učebně) v průměrném čase maximálně 1 sekundu
-(a volání `.route()` by se u takové mřížky mělo stihnout za sekundu aspoň 50).
-Úkol musí splňovat všechny náležitosti z minula + podmínku na čas.
+Vaším úkolem za 5 bodů je vytvořit pomocí PyQt5 grafické uživatelské rozhraní, které
+umožní vizualizovat a editovat vesmírnou mřížku. Můžete samozřejmě vyjít z práce na cvičení,
+ale zbývá toho poměrně dost dodělat. Rozhraní umožní:
 
-WARNING: Vaším úkolem *není* přepsat celé řešení do Cythonu.
+* vytvářet novou mřížku zadaných rozměrů (prázdnou, náhodně generovanou apod., jak chcete)
+* ukládat a načítat mřížku ve formě NumPy matic do/ze souborů dle volby uživatele
+** pokud se to nepovede, musí aplikace zobrazit chybové hlášení v grafické podobě (tj. ne jen do konzole)
+** formát souborů viz níže
+* prohlížet mřížku v grafické podobě
+** včetně všech objektů v ní a vizualizace nejkratší cesty ze zvoleného uzlu (viz níže)
+** pokud se mřížka celá nevejde do okna, musí mít posuvníky (jako na cvičení)
+** zoom (např. *Ctrl* + kolečko myši) není nutný, ale je příjemný
+* klást na mřížku objekty (uzly, stanice, singularity) a odebírat je (tyto změny se projeví v paměti na úrovni NumPy matice)
+* nabídka *Help* > *About* vyvolá okno s informacemi o aplikaci:
+** název
+** stručný popis
+** autor/autoři (vy, případně i my, pokud používáte náš kód)
+** odkaz na repozitář
+** informace o licenci
+** pokud používáte public domain grafiku z https://opengameart.org[OpenGameArt.org], nemáte právní povinnost zdroj zmínit, ale považujeme to za slušnost
 
-Následuje zadání, které stále platí:
+Veškerou potřebnou grafiku najdete ve složce `svgs` tohoto repozitáře.
+Celkové grafické zpracování je ale na vás, můžete použít jinou (např. vlastní) grafiku.
+
+== Zobrazování cesty
+
+* nejkratší záchrannou cestu z uživatelem zvolené pozice zobrazte pomocí obrázků čar ze složky `svgs/lines`
+** vybrané políčko reprezentujte obrázkem vesmírné lodě
+** tip: názvy souborů s čarami nejsou náhodné
+** tip: jelikož cesta vede přes políčka, na kterých může být jiný objekt, nemůžete cestu ukládat do matice s mřížkou
+* výpočet cesty máte připraven z minulých úkolů
+* aplikaci nebudeme testovat s mřížkou tisíce krát tisíce jako minulý úkol, ale pro rozumné velikosti (cca do 200 na 200) výpočet musí proběhnout dostatečně svižně, aby aplikace byla použitelná
+* výpočet cesty musíte provést po každé změně mřížky (vytvoření, načtení, přidání/odebrání objektu)
+* z některých pozic logicky cesta nemusí existovat, od nich tedy žádnou nevykreslujte (aplikace s takovou situací musí počítat a nesmí spadnout)
+
+== Formát souboru s mřížkou
+
+Ukládejte a načítejte mřížku takto, umožní nám to jednodušší kontrolu:
+
+[source,python]
+----
+numpy.savetxt(path, array)
+array = numpy.loadtxt(path, dtype=numpy.uint8)
+----
+
+== Předchozí (stále platné) zadání
 
 Vaším úkolem je pomocí NumPy vytvořit funkci `escape_routes(grid)` v modulu `spacegrid`.
 
